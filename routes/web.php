@@ -49,3 +49,12 @@ Route::put('/products/{product}', function(Product $product) {
     $product->title = request()->get('title');
     $product->save();
 })->name('product.update');
+
+Route::delete('/products/{product}', function(Product $product) {
+    //$product->delete(); respeita o soft-delete uma vez que foi implementado
+    $product->forceDelete();
+})->name('product.destroy');
+
+Route::delete('products/{product}/soft-delete', function(Product $product) {
+    $product->delete();
+})->name('product.soft-delete');

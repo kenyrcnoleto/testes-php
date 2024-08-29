@@ -4,6 +4,9 @@ use App\Models\Product;
 
 use function Pest\Laravel\assertDatabaseCount;
 use function Pest\Laravel\assertDatabaseHas;
+use function Pest\Laravel\assertDatabaseMissing;
+use function Pest\Laravel\assertSoftDeleted;
+use function Pest\Laravel\deleteJson;
 use function Pest\Laravel\postJson;
 use function Pest\Laravel\putJson;
 use function PHPUnit\Framework\assertSame;
@@ -41,7 +44,7 @@ it('should be able to create a product', function() {
 it('should be able to update a product', function() {
     //Product::factory()->create();
     $product = Product::factory()->create(['title' => 'Titulo Qualquer']);
-    //Verificar pois está sempre aparecendo com status positivo.
+    //Verificar pois está sempre aparecendo com status positivo para qualquer rota inexistente.
 
     \Pest\Laravel\putJson(
         route('product.update', $product),
@@ -61,7 +64,7 @@ it('should be able to update a product', function() {
         ->refresh()
         ->title->toBe('Atualizando o título');
 
-    assertSame('Atualizando o titulo', $product->title);
+    assertSame('Atualizando o titulo', $product->title, 'tem que ser igual');
 
 
     assertDatabaseCount('products', 1);
@@ -69,5 +72,31 @@ it('should be able to update a product', function() {
 })->todo();
 
 it('should be able to delete a product', function() {
+    $product = Product::factory()->create();
 
+
+    deleteJson(route('product.destroy', $product))
+    ->assertOk();
+
+    assertDatabaseMissing('products', [
+        'id' => $product->id,
+    ]);
+
+    assertDatabaseCount('products', 0);
+});
+
+
+it('should be able to soft-delete a product', function() {
+    $product = Product::factory()->create();
+
+
+    deleteJson(route('product.soft-delete', $product))
+    ->assertOk();
+
+    //Verificar com o soft delete
+    assertSoftDeleted('products', [
+        'id' => $product->id,
+    ]);
+
+    assertDatabaseCount('products', 1);
 });
