@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Product;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,3 +36,16 @@ Route::get('/products', function() {
         'products' => \App\Models\Product::all(),
     ]);
 });
+
+Route::post('/products', function() {
+
+    Product::query()->create(request()->only('title'));
+    return response()->json('','201');
+
+})->name('product.store');
+
+
+Route::put('/products/{product}', function(Product $product) {
+    $product->title = request()->get('title');
+    $product->save();
+})->name('product.update');
