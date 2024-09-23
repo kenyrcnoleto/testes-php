@@ -39,6 +39,11 @@ Route::get('/products', function() {
 
 Route::post('/products', function() {
 
+    //Não entendi o motivo mas o teste funciona apenas para 'required|max:255' e não para 'required', 'max:255'
+    request()->validate(
+        ['title' => 'required|max:255']
+    );
+
     Product::query()->create(request()->only('title'));
     return response()->json('','201');
 
