@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,12 +14,24 @@ class Product extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'title'
+        'title',
+        'code'
+    ];
+
+    protected $casts = [
+        'code' => 'hashed'
     ];
 
     public function owner() : BelongsTo
     {
         return $this->belongsTo(User::class, 'owner_id');
+    }
+
+    public function title():Attribute
+    {
+        //ucfirst transforma a primeira letra em maiúscula
+        //get é a mema ideia do cast que é conversão
+        return new Attribute(get :fn($value) => ucfirst($value));
     }
 
 }
