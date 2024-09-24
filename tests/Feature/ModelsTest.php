@@ -41,6 +41,16 @@ test('model set mutator :: product code should be encrypted', function () {
 });
 
 
+test('model scopes :: should bring only release products', function () {
+
+  Product::factory()->count(10)->create(['released' => true]);
+  Product::factory()->count(5)->create(['released' => false]);
+
+  expect(Product::query()->released()->get())
+    ->toHaveCount(10);
+});
+
+
 /*
 trabalhando com tinker
 
