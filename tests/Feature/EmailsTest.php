@@ -18,4 +18,22 @@ test('an email was sent', function () {
     Mail::assertSent(WelcomeEmail::class);
 });
 
+test('an email was to user:x', function () {
+    Mail::fake();
 
+    $user = User::factory()->create();
+
+    post(route('sending-email', $user))->assertOk();
+
+
+    Mail::assertSent(WelcomeEmail::class, function (WelcomeEmail $email) use ($user) {
+
+        return $email->hasTo($user->email);
+
+        //Passando para arrow function
+        //Mail::assertSent(
+        // WelcomeEmail::class,
+        // fn(WelcomeEmail $email) => $email->hasTo($user->email); )
+    });
+
+});
