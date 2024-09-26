@@ -78,5 +78,5 @@ Route::post('/products-import', function() {
     $data = request()->get('data');
     //dd($data);
 
-    ImportProductsJob::dispatch($data);
+    ImportProductsJob::dispatch($data, auth()->id());
 })->name('product.import');
