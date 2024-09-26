@@ -48,3 +48,14 @@ test('email subject should contain te user name', function () {
 
 
 });
+
+
+test('email content should contain user email with a text', function () {
+    $user = User::factory()->create();
+
+    $email = new WelcomeEmail($user);
+
+    expect($email)
+    ->assertSeeInHtml('confirmando que o seu eh: '. $user->email);
+
+});
