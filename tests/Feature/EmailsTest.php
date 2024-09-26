@@ -22,6 +22,7 @@ test('an email was to user:x', function () {
     Mail::fake();
 
     $user = User::factory()->create();
+    //dd($user);
 
     post(route('sending-email', $user))->assertOk();
 
@@ -35,5 +36,15 @@ test('an email was to user:x', function () {
         // WelcomeEmail::class,
         // fn(WelcomeEmail $email) => $email->hasTo($user->email); )
     });
+
+});
+
+test('email subject should contain te user name', function () {
+    $user = User::factory()->create();
+
+    $email = new WelcomeEmail($user);
+
+    expect($email)->assertHasSubject('Thank you' . $user->name);
+
 
 });
