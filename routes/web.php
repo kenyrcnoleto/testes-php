@@ -4,6 +4,7 @@ use App\Jobs\ImportProductsJob;
 use App\Mail\WelcomeEmail;
 use App\Models\Product;
 use App\Models\User;
+use App\Notifications\NewProductionNotification;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
@@ -48,7 +49,20 @@ Route::post('/products', function() {
         ['title' => 'required|max:255']
     );
 
-    Product::query()->create(request()->only('title'));
+    //dd(request()->title);
+    //envia tanto a chave quanto o valor -- request()->only('title')
+
+
+    $product =Product::query()->create([
+        'title' => request()->get('title'),
+        'owner_id' => auth()->id(),
+    ]);
+    //dd($product);
+
+    //Dentro do modo usertenho uma trait chamada notifiable, dar poder para ser modificado
+    auth()->user()->notify(
+        new NewProductionNotification()
+    );
     return response()->json('','201');
 
 })->name('product.store');
