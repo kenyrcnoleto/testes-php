@@ -23,5 +23,16 @@ test('it should be to create product via command', function () {
     assertDatabaseCount('products', 1);
 
 
+});
+
+test('it should asks for user and title if is not passed as argument', function () {
+
+    $user = User::factory()->create();
+
+    artisan(CreateProductCommand::class, [])
+        ->expectsQuestion('Please, provide a valid user id', $user->id)
+        ->expectsQuestion('Plese, provide a title for the product', 'Product 1')
+        ->expectsOutputToContain('Product created!!')
+        ->assertSuccessful();
 
 });
