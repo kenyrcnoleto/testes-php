@@ -104,5 +104,7 @@ Route::post('/products-import', function() {
     ImportProductsJob::dispatch($data, auth()->id());
 })->name('product.import');
 
-Route::get('/secure-route', fn()=>['oi'])->middleware(RogerMiddleware::class)->name('secure-route');
+Route::get('/secure-route', fn()=>['oi'])
+    ->middleware('roger')
+    ->name('secure-route');
 
