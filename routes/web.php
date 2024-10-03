@@ -1,5 +1,6 @@
 <?php
 
+use App\Actions\CreateProductAction;
 use App\Jobs\ImportProductsJob;
 use App\Mail\WelcomeEmail;
 use App\Models\Product;
@@ -52,17 +53,24 @@ Route::post('/products', function() {
     //dd(request()->title);
     //envia tanto a chave quanto o valor -- request()->only('title')
 
+    //Como não pertence o mundo Laravel não é view app, por isso precisa colocar o função app()
+    //$action = new CreateProductAction();
+    app(CreateProductAction::class)
+        ->handle(
+            request()->get( 'title'),auth()->user());
 
-    $product =Product::query()->create([
-        'title' => request()->get('title'),
-        'owner_id' => auth()->id(),
-    ]);
-    //dd($product);
 
-    //Dentro do modo usertenho uma trait chamada notifiable, dar poder para ser modificado
-    auth()->user()->notify(
-        new NewProductionNotification()
-    );
+
+    // $product =Product::query()->create([
+    //     'title' => request()->get('title'),
+    //     'owner_id' => auth()->id(),
+    // ]);
+    // //dd($product);
+
+    // //Dentro do modo usertenho uma trait chamada notifiable, dar poder para ser modificado
+    // auth()->user()->notify(
+    //     new NewProductionNotification()
+    // );
     return response()->json('','201');
 
 })->name('product.store');
