@@ -6,14 +6,14 @@ test('testando código 200')
     ->get('/')
     ->assertStatus(200);
 
-test('1-testando código 404', function() {
-    $response = get('/404');
-    //dd($response->status());
-});
+// test('1-testando código 404', function() {
+//     $response = get('/404');
+//     dd($response->status());
+// });
 
 
-test('testando código 404')
-    ->get('/not-exists')
+test('testando código 404:: não exite')
+    ->get('/404')
     ->assertStatus(404)
     ->assertNotFound();
 

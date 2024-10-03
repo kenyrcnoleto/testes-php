@@ -26,7 +26,7 @@ Route::get('/', function () {
 });
 
 Route::get('/404', function() {
-    return ['oi'];
+    return response('', 404);
 });
 
 Route::get('/403', function() {
