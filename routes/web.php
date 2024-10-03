@@ -1,6 +1,7 @@
 <?php
 
 use App\Actions\CreateProductAction;
+use App\Http\Middleware\RogerMiddleware;
 use App\Jobs\ImportProductsJob;
 use App\Mail\WelcomeEmail;
 use App\Models\Product;
@@ -102,3 +103,6 @@ Route::post('/products-import', function() {
 
     ImportProductsJob::dispatch($data, auth()->id());
 })->name('product.import');
+
+Route::get('/secure-route', fn()=>['oi'])->middleware(RogerMiddleware::class)->name('secure-route');
+
