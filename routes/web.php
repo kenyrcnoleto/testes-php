@@ -108,3 +108,19 @@ Route::get('/secure-route', fn()=>['oi'])
     ->middleware('roger')
     ->name('secure-route');
 
+
+Route::post('/upload-avatar', function() {
+
+    $file = request()->file('file');
+
+    //dd($file);
+
+    $file->store(
+        path: '/',
+        options: ['disk' => 'avatar']
+    );
+
+
+
+})->name('upload-avatar');
+
