@@ -124,3 +124,24 @@ Route::post('/upload-avatar', function() {
 
 })->name('upload-avatar');
 
+Route::post('/import-products', function() {
+
+    $file = request()->file('file');
+    // dd($file->getContent());
+
+    $openToRead = fopen($file->getRealPath(), 'r');
+
+    // dd($openToRead);
+    // **Importante...Ignorar a primeira linha se ela contiver cabeçalhos
+     $header = fgetcsv($openToRead, 1000, ',');
+
+    while(($data = fgetcsv($openToRead, 1000, ',')) !== false) {
+        //dd($data);
+
+        Product::query()->create([
+            'title' => $data[0],
+            'owner_id' => $data[1]
+        ]);
+    }
+})->name('import-products');
+
