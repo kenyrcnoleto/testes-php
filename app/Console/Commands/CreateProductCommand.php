@@ -2,8 +2,13 @@
 
 namespace App\Console\Commands;
 
+use App\Actions\CreateProductAction;
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule as ValidationRule;
+use TijsVerkoyen\CssToInlineStyles\Css\Rule\Rule;
 
 class CreateProductCommand extends Command
 {
@@ -39,10 +44,26 @@ class CreateProductCommand extends Command
             $title = $this->ask('Plese, provide a title for the product');
         }
 
+        /*
         Product::query()->create([
             'title' => $title,
             'owner_id' => $user
         ]);
+        */
+
+        //Uma outra forma de testar o exception, executando a validação.
+
+        Validator::make(['title' => $title,'user' => $user], [
+            'title' => ['required', 'string', 'min:3'],
+            'user' => ['required', ValidationRule::exists('users', 'id')]
+        ])->validate();
+
+
+        //Pode chamar o action
+        app(CreateProductAction::class)->handle(
+            $title, User::findOrfail($user)
+        );
+
 
         //Informação que coloca após o camando ter sido rodado
 
