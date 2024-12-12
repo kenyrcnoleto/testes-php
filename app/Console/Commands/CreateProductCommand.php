@@ -30,7 +30,7 @@ class CreateProductCommand extends Command
     /**
      * Execute the console command.
      */
-    public function handle():void
+    public function handle(CreateProductAction $action):void
     {
         $title = $this->argument('title');
         $user = $this->argument('user');
@@ -60,7 +60,9 @@ class CreateProductCommand extends Command
 
 
         //Pode chamar o action
-        app(CreateProductAction::class)->handle(
+        ///Ao invés de utilizar o app, também pode utilizar a injeação de independẽncia coloando como parametro$action
+        //app(CreateProductAction::class)
+        $action->handle(
             $title, User::findOrfail($user)
         );
 

@@ -44,7 +44,7 @@ Route::get('/products', function() {
     ]);
 });
 
-Route::post('/products', function() {
+Route::post('/products', function(CreateProductAction $action) {
 
     //Não entendi o motivo mas o teste funciona apenas para 'required|max:255' e não para 'required', 'max:255'
     request()->validate(
@@ -56,7 +56,10 @@ Route::post('/products', function() {
 
     //Como não pertence o mundo Laravel não é view app, por isso precisa colocar o função app()
     //$action = new CreateProductAction();
-    app(CreateProductAction::class)
+
+    //Ao invés de utilizar o app, também pode utilizar a injeação de independẽncia coloando como parametro$action
+    //app(CreateProductAction::class)
+    $action
         ->handle(
             request()->get( 'title'),auth()->user());
 
